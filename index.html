@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0c172b"><meta name="description" content="PartsTrack inventory and lifecycle dashboard demo">
+  <title>PartsTrack — Inventory & Lifecycle</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="team.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="#dashboard" aria-label="PartsTrack home"><span class="brand-mark">◆</span><span><b>PartsTrack</b><small>Inventory & Lifecycle</small></span></a>
+    <label class="user-switcher"><span>SWITCH USER</span><select id="userSelect" aria-label="Switch demo user"><option value="admin">Admin</option><option value="team">Harris Racing</option></select></label>
+    <div class="workspace-label">WORKSPACE</div>
+    <nav class="nav" aria-label="Main navigation">
+      <button class="nav-item active" data-page="dashboard"><span>▦</span> Dashboard</button>
+      <button class="nav-item" data-page="inventory"><span>⬡</span> Parts inventory</button>
+      <button class="nav-item" data-page="lifecycle"><span>◷</span> Lifecycle tracking</button>
+      <button class="nav-item" data-page="transactions"><span>⇄</span> Stock transactions</button>
+      <button class="nav-item" data-page="teams"><span>♧</span> Team parts</button>
+    </nav>
+    <div class="sidebar-bottom"><div class="secure-pill"><span class="green-dot"></span><div><b>Demo workspace</b><small>Sample data only</small></div></div><button class="nav-item" id="privacyBtn"><span>◈</span> Privacy & security</button><div class="user-chip"><span class="avatar" id="sidebarAvatar">AD</span><div><b id="sidebarUserName">Admin</b><small id="roleLabel">System administrator</small></div></div></div>
+  </aside>
+  <main class="main-area">
+    <header class="topbar"><button class="mobile-menu" id="mobileMenu" aria-label="Toggle navigation">☰</button><div class="breadcrumbs"><span>Workspace</span><b>/</b><strong id="crumbTitle">Dashboard</strong></div><div class="top-actions"><label class="global-search"><span>⌕</span><input id="globalSearch" placeholder="Search parts, IDs, locations…" aria-label="Search parts"></label><div class="notification-wrap"><button class="icon-btn" id="alertsBtn" aria-label="Notifications" aria-expanded="false" aria-controls="notificationPanel">♧<i id="notificationBadge" class="notification-badge hidden"></i></button><section class="notification-panel hidden" id="notificationPanel" aria-label="Recent notifications"><div class="notification-heading"><div><b>Notifications</b><small id="notificationCount">Recent inventory changes</small></div><button type="button" class="text-btn" id="markNotificationsRead">Mark all read</button></div><div id="notificationList" class="notification-list"></div></section></div><button class="profile-btn" type="button"><span class="avatar" id="profileAvatar">AD</span><span><b id="profileName">Admin</b><small id="profileRole">System administrator</small></span></button></div></header>
+    <section class="page-content">
+      <div class="page-heading"><div><div class="eyebrow" id="viewEyebrow">SYSTEM OVERVIEW</div><h1 id="pageTitle">Good afternoon, Jordan <span class="wave">✦</span></h1><p id="pageSubtitle">Here's what's happening across your inventory today.</p></div><div class="heading-actions"><button class="btn btn-primary" id="addPartBtn">＋ Add part</button></div></div>
+      <div class="notice" id="demoNotice"><span>ⓘ</span><div><b>Interactive demo</b><p>Changes are saved only in this browser using local storage. The Admin and Harris Racing switcher changes the demo view; it is not login or access control. Use fictional data only; this static demo does not provide secure multi-user accounts or private server storage.</p></div><button id="dismissNotice" aria-label="Dismiss notice">×</button></div>
+      <section id="dashboardPage" class="page-section">
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon blue">⬡</span><span class="stat-trend positive">↗ 8.4%</span></div><p>Total part records</p><div class="stat-value" id="totalParts">42</div><small>Across selected scope</small><div class="sparkline blue-line"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon mint">▦</span><span class="stat-trend positive">↗ 4.2%</span></div><p>Units in stock</p><div class="stat-value" id="totalUnits">1,284</div><small>Physical units available</small><div class="sparkline mint-line"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon amber">⚠</span><span class="stat-trend warning">Needs attention</span></div><p>Low stock</p><div class="stat-value" id="lowStock">6</div><small>At or below minimum level</small><div class="sparkline amber-line"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon rose">⊗</span><span class="stat-trend danger">Action required</span></div><p>Out of stock</p><div class="stat-value" id="outStock">2</div><small>Currently unavailable</small><div class="sparkline rose-line"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+        </div>
+        <div class="content-grid">
+          <section class="panel inventory-panel"><div class="panel-heading"><div><h2>Part tracking cards</h2><p>Browse parts and open their lifecycle record.</p></div><button class="text-btn" data-goto="inventory">View inventory →</button></div><div class="filter-row"><label class="search-field"><span>⌕</span><input id="partSearch" placeholder="Search by name or part ID…"></label><select id="statusFilter" aria-label="Filter by stock status"><option value="all">All stock statuses</option><option value="In stock">In stock</option><option value="Low stock">Low stock</option><option value="Out of stock">Out of stock</option></select></div><div class="parts-grid" id="partsGrid"></div><div class="empty-state hidden" id="emptyState">No parts match these filters.</div></section>
+          <aside class="right-column"><section class="panel lifecycle-panel"><div class="panel-heading"><div><h2>Lifecycle overview</h2><p>Where parts are in their journey</p></div><button class="more-btn" data-goto="lifecycle">•••</button></div><div class="lifecycle-summary"><div class="donut" id="donut"><div><b id="lifecycleCount">42</b><small>Part records</small></div></div><div class="legend" id="lifecycleLegend"></div></div></section><section class="panel activity-panel"><div class="panel-heading"><div><h2>Recent activity</h2><p>Latest recorded changes</p></div><button class="text-btn" data-goto="transactions">View all</button></div><div id="activityList" class="activity-list"></div></section></aside>
+        </div>
+      </section>
+      <section id="inventoryPage" class="page-section hidden"><div class="panel"><div class="panel-heading"><div><h2>Parts inventory</h2><p>Search, filter and manage every registered part.</p></div><div class="team-tools"><button class="btn btn-secondary" id="importBtn">Import CSV</button><input id="importFile" type="file" accept=".csv,text/csv" class="hidden"><button class="btn btn-primary" id="inventoryAddBtn">＋ Add part</button></div></div><div class="filter-row"><label class="search-field"><span>⌕</span><input id="inventorySearch" placeholder="Search part name, ID, category or location…"></label><select id="categoryFilter"><option value="all">All categories</option><option>Motors</option><option>Bearings</option><option>Gears</option><option>Hydraulics</option><option>Electrical</option><option>Fasteners</option><option>Other</option></select><select id="inventoryStatus"><option value="all">All stock statuses</option><option>In stock</option><option>Low stock</option><option>Out of stock</option></select></div><div id="inventoryTable" class="table-wrap"></div></div></section>
+      <section id="lifecyclePage" class="page-section hidden"><div class="panel"><div class="panel-heading"><div><h2>Lifecycle tracking</h2><p>Follow each part from manufacture to reuse, donation or retirement.</p></div><span class="tag tag-blue">Auditable timeline demo</span></div><div class="timeline-list" id="fullTimeline"></div></div></section>
+      <section id="transactionsPage" class="page-section hidden"><div class="panel"><div class="panel-heading"><div><h2>Stock transactions</h2><p>Sample history of stock changes and location transfers.</p></div><button class="btn btn-secondary" id="exportBtn">↓ Export CSV</button></div><div id="transactionsTable" class="table-wrap"></div></div></section>
+      <section id="teamsPage" class="page-section hidden">
+        <div class="panel team-panel">
+          <div class="panel-heading">
+            <div><h2>Team parts circulation</h2><p>See what each team has in use, idle, donated, or broken.</p></div>
+            <div class="team-tools">
+              <label class="scope-select"><span>Team</span><select id="teamSelect" aria-label="Choose team"><option>Warehouse</option><option>Assembly</option><option>Maintenance</option><option>R&amp;D</option></select></label>
+              <button class="btn btn-primary" id="teamAddBtn">＋ Add part</button>
+            </div>
+          </div>
+          <div class="condition-grid" id="conditionSummary"></div>
+          <section class="circulation-chart" aria-labelledby="circulationChartTitle">
+            <div class="panel-heading"><div><h3 id="circulationChartTitle">Units by condition</h3><p>Current physical quantity for the selected team</p></div></div>
+            <div id="conditionChart" class="condition-chart"></div>
+          </section>
+          <section class="circulation-list">
+            <div class="panel-heading"><div><h3>Parts in circulation</h3><p id="teamPartCount">All tracked parts assigned to this team.</p></div></div>
+            <div class="filter-row"><label class="search-field"><span>⌕</span><input id="teamSearch" placeholder="Search part number, name, or location…" aria-label="Search team parts"></label><select id="teamConditionFilter" aria-label="Filter by condition"><option value="all">All conditions</option><option>In use</option><option>Not in use</option><option>Donated</option><option>Broken</option></select></div>
+            <div id="teamPartsTable" class="table-wrap"></div>
+          </section>
+          <div class="team-data-note"><b>Loading real inventory?</b> Check manufacturer part numbers in public catalogs such as <a href="https://developer.digikey.com/" target="_blank" rel="noopener noreferrer">DigiKey</a> and <a href="https://www.mouser.com/api-hub/" target="_blank" rel="noopener noreferrer">Mouser</a>. Stock quantities and team assignments are organization-specific, not public catalog data. Use CSV import to load verified figures; the included records are examples.</div>
+          <div class="permission-note"><span>◈</span><div><b>Demo data is stored in this browser</b><p>This static demo is not shared across users or devices. Team access in a production system must be enforced by a trusted backend.</p></div></div>
+        </div>
+      </section>
+    </section>
+    <footer><span>© 2026 PartsTrack Demo</span><span><span class="green-dot"></span> Demo mode · No server connection</span><a href="LICENSE">Open-source licence</a></footer>
+  </main>
+</div>
+<div class="modal-backdrop hidden" id="partModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal modal-wide"><div class="modal-header"><div><div class="eyebrow">PART RECORD</div><h2 id="modalTitle">Part details</h2></div><button class="close-btn" data-close="partModal" aria-label="Close">×</button></div><div id="partModalBody"></div></div></div>
+<div class="modal-backdrop hidden" id="addModal" role="dialog" aria-modal="true" aria-labelledby="addModalTitle"><div class="modal"><div class="modal-header"><div><div class="eyebrow">INVENTORY MANAGEMENT</div><h2 id="addModalTitle">Add a part</h2><p>Create a new part tracking record.</p></div><button class="close-btn" data-close="addModal" aria-label="Close">×</button></div><form id="addPartForm" class="form-grid"><label>Part name *<input name="name" required maxlength="80" placeholder="e.g. Hydraulic pump"></label><label>Part ID *<input name="id" required maxlength="24" placeholder="e.g. PT-013"></label><label>Category<select name="category"><option>Motors</option><option>Bearings</option><option>Gears</option><option>Hydraulics</option><option>Electrical</option><option>Fasteners</option><option>Other</option></select></label><label>Current quantity *<input name="qty" type="number" min="0" max="1000000" value="0" required></label><label>Minimum stock *<input name="min" type="number" min="0" max="1000000" value="5" required></label><label>Current location<input name="location" required maxlength="80" value="Warehouse A"></label><label>Owning team<select name="team"><option>Warehouse</option><option>Assembly</option><option>Maintenance</option><option>R&D</option></select></label><label>Lifecycle stage<select name="stage"><option>In use</option><option>In storage</option><option>Donated</option><option>Repurposed</option><option>Recycled</option><option>Decommissioned</option></select></label><label class="full-field">Description<textarea name="description" rows="3" maxlength="300" placeholder="Optional technical notes"></textarea></label><div class="form-actions full-field"><button type="button" class="btn btn-secondary" data-close="addModal">Cancel</button><button type="submit" class="btn btn-primary">Save part</button></div></form></div></div>
+<div class="modal-backdrop hidden" id="privacyModal" role="dialog" aria-modal="true" aria-labelledby="privacyTitle"><div class="modal"><div class="modal-header"><div><div class="eyebrow">SECURITY NOTES</div><h2 id="privacyTitle">Privacy & confidentiality</h2></div><button class="close-btn" data-close="privacyModal" aria-label="Close">×</button></div><div class="privacy-content"><div class="privacy-row"><span class="stat-icon mint">✓</span><div><b>No embedded secrets</b><p>This demo includes no API keys, passwords, or private credentials.</p></div></div><div class="privacy-row"><span class="stat-icon blue">⌂</span><div><b>Local browser storage</b><p>Demo changes stay in this browser. Do not use real company, personal, or commercially sensitive data.</p></div></div><div class="privacy-row"><span class="stat-icon amber">!</span><div><b>Not production-secure</b><p>GitHub Pages serves public static files. Real confidentiality requires authenticated server-side access controls, a protected database, backups, and audit logging.</p></div></div><div class="privacy-row"><span class="stat-icon purple">©</span><div><b>Open-source licence</b><p>Source code is licensed under the MIT License. Third-party libraries retain their own licences.</p></div></div></div></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="app.js"></script>
+</body></html>
